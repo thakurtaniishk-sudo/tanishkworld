@@ -5,7 +5,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import "./verifyOTP.css";
+import "./VerifyOtp.css";
 
 const API_URL = "http://localhost:5000/api/auth";
 const TIMEOUT_MS = 20000;

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import "./resetPassword.css";
+import "./ResetPassword.css";
 
 const API_URL = "http://localhost:5000/api/auth";
 
