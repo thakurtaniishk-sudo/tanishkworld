@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../services/apiConfig";
 import "./dashboard.css";
 
-const PROFILE_API = "http://localhost:5000/api/users/me";
+const PROFILE_API = apiUrl("/api/users/me");
 
 function Dashboard() {
   const navigate = useNavigate();

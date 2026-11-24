@@ -1,7 +1,5 @@
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "http://localhost:5000";
+import { apiUrl } from "./apiConfig";
 
 function getToken() {
   return sessionStorage.getItem(
@@ -21,7 +19,7 @@ async function request(path, options = {}) {
   }
 
   const response = await fetch(
-    `${API_URL}${path}`,
+    apiUrl(path),
     {
       ...options,
       headers: {
@@ -67,7 +65,7 @@ function uploadAttachments(chatId, files, { signal, onProgress } = {}) {
     files.forEach((file) => body.append("files", file));
     xhr.open(
       "POST",
-      `${API_URL}/api/chats/attachments?chatId=${encodeURIComponent(chatId)}`
+      `${apiUrl("/api/chats/attachments")}?chatId=${encodeURIComponent(chatId)}`
     );
     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.responseType = "json";
@@ -124,7 +122,7 @@ async function downloadAttachment(attachmentId) {
   if (!token) throw new Error("LOGIN_REQUIRED");
 
   const response = await fetch(
-    `${API_URL}/api/chats/attachments/${encodeURIComponent(attachmentId)}`,
+    apiUrl(`/api/chats/attachments/${encodeURIComponent(attachmentId)}`),
     {
       headers: {
         Authorization: `Bearer ${token}`,

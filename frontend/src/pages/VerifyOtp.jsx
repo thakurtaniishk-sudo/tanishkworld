@@ -5,9 +5,10 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { apiUrl } from "../services/apiConfig";
 import "./VerifyOtp.css";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = apiUrl("/api/auth");
 const TIMEOUT_MS = 20000;
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN = 60;

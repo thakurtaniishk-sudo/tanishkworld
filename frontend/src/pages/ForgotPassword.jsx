@@ -1,9 +1,10 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { apiUrl } from "../services/apiConfig";
 import "./forgotpassword.css";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = apiUrl("/api/auth");
 const REQUEST_TIMEOUT = 20000;
 
 export default function ForgotPassword() {

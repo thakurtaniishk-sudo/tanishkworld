@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { apiUrl } from "../services/apiConfig";
 import "./ResetPassword.css";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = apiUrl("/api/auth");
 
 export default function ResetPassword() {
   const navigate = useNavigate();

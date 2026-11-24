@@ -1,9 +1,10 @@
 
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { apiUrl } from "../services/apiConfig";
 import "./signup.css";
 
-const LOGIN_API = "http://localhost:5000/api/users/login";
+const LOGIN_API = apiUrl("/api/users/login");
 
 function Login() {
   const navigate = useNavigate();
