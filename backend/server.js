@@ -1,10 +1,8 @@
-
 require("dotenv").config();
 
 const dns = require("node:dns");
 
-// Fix MongoDB Atlas SRV DNS resolution in local development.
-// Preserve the hosting provider's DNS settings in production.
+// DNS Configuration
 if (process.env.NODE_ENV !== "production") {
   dns.setServers(["8.8.8.8", "1.1.1.1"]);
 }
@@ -22,28 +20,71 @@ const userRoutes = require("./routes/userRoutes");
 // Create Express App
 const app = express();
 
+// ==============================
 // CORS Configuration
+// ==============================
+
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:3000",
+  "https://tanishkworld-frontend.vercel.app",
   process.env.FRONTEND_URL,
 ]
   .filter(Boolean)
-  .map((origin) => origin.replace(/\/$/, ""));
+  .map((origin) => origin.trim().replace(/\/+$/, ""));
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+console.log("Allowed CORS Origins:", allowedOrigins);
 
-      return callback(new Error("Not allowed by CORS"));
-    },
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
 
+    const normalizedOrigin = origin.trim().replace(/\/+$/, "");
+
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+
+    console.error("Blocked CORS Origin:", origin);
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+
+  methods: [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+    "HEAD",
+  ],
+
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "Accept",
+  ],
+
+  credentials: true,
+
+  optionsSuccessStatus: 204,
+};
+
+// Apply CORS before all routes
+app.use(cors(corsOptions));
+
+// ==============================
 // Middleware
+// ==============================
+
 app.use(express.json());
+
+// ==============================
+// API Routes
+// ==============================
 
 // AI Routes
 app.use("/api/ai", aiRoutes);
@@ -57,7 +98,10 @@ app.use("/api/auth", passwordRoutes);
 // User Routes
 app.use("/api/users", userRoutes);
 
+// ==============================
 // Health Check Route
+// ==============================
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -65,10 +109,16 @@ app.get("/", (req, res) => {
   });
 });
 
+// ==============================
 // Server Port
+// ==============================
+
 const PORT = process.env.PORT || 5000;
 
+// ==============================
 // MongoDB Connection + Start Server
+// ==============================
+
 const startServer = async () => {
   try {
     if (!process.env.MONGO_URI) {
@@ -92,7 +142,10 @@ const startServer = async () => {
     // Initial Attachment Cleanup
     try {
       await cleanupStaleAttachments();
-      console.log("Initial attachment cleanup completed");
+
+      console.log(
+        "Initial attachment cleanup completed"
+      );
     } catch (error) {
       console.error(
         "Initial attachment cleanup failed:",
